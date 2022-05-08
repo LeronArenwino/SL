@@ -8,29 +8,31 @@ from typing import NamedTuple
 @unique
 class TokenType(Enum):
   # Operators and special symbols
-  TK_ASIGNACION = auto()
-  TK_COMA = auto()
-  TK_CORCHETE_DERECHO = auto()
-  TK_CORCHETE_IZQUIERDO = auto()
-  TK_DISTINTO_DE = auto()
-  TK_DIVISION = auto()
-  TK_DOS_PUNTOS = auto()
-  TK_IGUAL_QUE = auto()
-  TK_LLAVE_DERECHA = auto()
-  TK_LLAVE_IZQUIERDA = auto()
-  TK_MAYOR = auto()
-  TK_MAYOR_IGUAL = auto()
-  TK_MENOR = auto()
-  TK_MENOR_IGUAL = auto()
-  TK_MODULO = auto()
-  TK_MULTIPLICACION = auto()
-  TK_PARENTESIS_DERECHO = auto()
-  TK_PARENTESIS_IZQUIERDO = auto()
-  TK_POTENCIACION = auto()
-  TK_PUNTO = auto()
-  TK_PUNTO_Y_COMA = auto()
-  TK_RESTA = auto()
-  TK_SUMA = auto()
+  TK_ASIGNACION = auto() # One '='
+  TK_COMA = auto() # One ','
+  TK_CORCHETE_DERECHO = auto() # One ']'
+  TK_CORCHETE_IZQUIERDO = auto() # One '['  
+  TK_DIVISION = auto() # One '/'
+  TK_DOS_PUNTOS = auto() # One ':'
+  TK_LLAVE_DERECHA = auto() # One '}'
+  TK_LLAVE_IZQUIERDA = auto() # One '{'
+  TK_MAYOR = auto() # One '>'
+  TK_MENOR = auto() # One '<'
+  TK_MODULO = auto() # One '%'
+  TK_MULTIPLICACION = auto() # One '*'
+  TK_PARENTESIS_DERECHO = auto() # One ')'
+  TK_PARENTESIS_IZQUIERDO = auto() # One '('
+  TK_POTENCIACION = auto() # One '^'
+  TK_PUNTO = auto() # One '.'
+  TK_PUNTO_Y_COMA = auto() # One ';'
+  TK_RESTA = auto() # One '-'
+  TK_SUMA = auto() # One '+'
+
+  # Two operators
+  TK_DISTINTO_DE = auto() # Two '<>'
+  TK_IGUAL_QUE = auto() # Two '=='
+  TK_MAYOR_IGUAL = auto() # Two'>='
+  TK_MENOR_IGUAL = auto() # Two '<='
 
   # Reserved
   AND = auto()
