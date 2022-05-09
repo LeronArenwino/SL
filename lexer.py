@@ -1,4 +1,5 @@
 from token import (
+    lookup_token_type,
     Token,
     TokenType
 )
