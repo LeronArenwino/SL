@@ -145,6 +145,13 @@ class Lexer:
 
         return self._source[initial_position:self._position]
 
+    def _peek_character(self) -> str:
+        """Lee el siguiente carácter y lo retorna, si no hay más carácteres por leer retorna ''."""
+        if self._read_position >= len(self._source):
+            return ''
+        
+        return self._source[self._read_position]
+
     def _skip_whitespace(self) -> None:
         """Permite leer el siguiente carácter cuando lee un espacio en blanco."""
         while match(r'^\s$', self._character):
