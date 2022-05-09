@@ -102,6 +102,16 @@ class Lexer:
         """Valida si el carácter es un signo '-' o '+'."""
         return bool(match(r'[-+]', character))
 
+    def _make_two_character_token(self, token_type: TokenType) -> Token:
+        """Genera un token de dos carácteres."""
+        initial_position = self._position + 1
+        
+        prefix = self._character
+        self._read_character()
+        suffix = self._character
+
+        return Token(token_type, f'{prefix}{suffix}', self._line, initial_position)
+
     def _read_character(self) -> None:
         """Lee el siguiente carácter de la cadena."""
         if self._read_position >= len(self._source):
