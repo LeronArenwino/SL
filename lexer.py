@@ -21,50 +21,68 @@ class Lexer:
         self._skip_whitespace()
 
         if match(r'\=', self._character):
-            token = Token(TokenType.TK_ASIGNACION, self._character, self._line, self._position + 1)
+            if self._peek_character() == '=':
+                token = self._make_two_character_token(TokenType.TK_IGUAL_QUE)
+            else:
+                token = Token(TokenType.TK_ASIGNACION, None, self._line, self._position + 1)
         elif match(r'\,', self._character):
-            token = Token(TokenType.TK_COMA, self._character, self._line, self._position + 1)
+            token = Token(TokenType.TK_COMA, None, self._line, self._position + 1)
         elif match(r'\]', self._character):
-            token = Token(TokenType.TK_CORCHETE_DERECHO, self._character, self._line, self._position + 1)
+            token = Token(TokenType.TK_CORCHETE_DERECHO, None, self._line, self._position + 1)
         elif match(r'\[', self._character):
-            token = Token(TokenType.TK_CORCHETE_IZQUIERDO, self._character, self._line, self._position + 1)
+            token = Token(TokenType.TK_CORCHETE_IZQUIERDO, None, self._line, self._position + 1)
         elif match(r'\/', self._character):
-            token = Token(TokenType.TK_DIVISION, self._character, self._line, self._position + 1)
+            if self._peek_character() == '/':
+                return None
+            else:
+                token = Token(TokenType.TK_DIVISION, None, self._line, self._position + 1)
         elif match(r'\:', self._character):
-            token = Token(TokenType.TK_DOS_PUNTOS, self._character, self._line, self._position + 1)
+            token = Token(TokenType.TK_DOS_PUNTOS, None, self._line, self._position + 1)
         elif match(r'\}', self._character):
-            token = Token(TokenType.TK_LLAVE_DERECHA, self._character, self._line, self._position + 1)
+            token = Token(TokenType.TK_LLAVE_DERECHA, None, self._line, self._position + 1)
         elif match(r'\{', self._character):
-            token = Token(TokenType.TK_LLAVE_IZQUIERDA, self._character, self._line, self._position + 1)
+            token = Token(TokenType.TK_LLAVE_IZQUIERDA, None, self._line, self._position + 1)
         elif match(r'\>', self._character):
-            token = Token(TokenType.TK_MAYOR, self._character, self._line, self._position + 1)
+            if self._peek_character() == '=':
+                token = self._make_two_character_token(TokenType.TK_MAYOR_IGUAL)
+            else:
+                token = Token(TokenType.TK_MAYOR, None, self._line, self._position + 1)
         elif match(r'\<', self._character):
-            token = Token(TokenType.TK_MENOR, self._character, self._line, self._position + 1)
+            if self._peek_character() == '>':
+                token = self._make_two_character_token(TokenType.TK_DISTINTO_DE)
+            elif self._peek_character() == '=':
+                token = self._make_two_character_token(TokenType.TK_MENOR_IGUAL)
+            else:
+                token = Token(TokenType.TK_MENOR, None, self._line, self._position + 1)
         elif match(r'\%', self._character):
-            token = Token(TokenType.TK_MODULO, self._character, self._line, self._position + 1)
+            token = Token(TokenType.TK_MODULO, None, self._line, self._position + 1)
         elif match(r'\*', self._character):
-            token = Token(TokenType.TK_MULTIPLICACION, self._character, self._line, self._position + 1)
+            token = Token(TokenType.TK_MULTIPLICACION, None, self._line, self._position + 1)
         elif match(r'\)', self._character):
-            token = Token(TokenType.TK_PARENTESIS_DERECHO, self._character, self._line, self._position + 1)
+            token = Token(TokenType.TK_PARENTESIS_DERECHO, None, self._line, self._position + 1)
         elif match(r'\(', self._character):
-            token = Token(TokenType.TK_PARENTESIS_IZQUIERDO, self._character, self._line, self._position + 1)
+            token = Token(TokenType.TK_PARENTESIS_IZQUIERDO, None, self._line, self._position + 1)
         elif match(r'\^', self._character):
-            token = Token(TokenType.TK_POTENCIACION, self._character, self._line, self._position + 1)
+            token = Token(TokenType.TK_POTENCIACION, None, self._line, self._position + 1)
         elif match(r'\.', self._character):
-            token = Token(TokenType.TK_PUNTO, self._character, self._line, self._position + 1)
+            token = Token(TokenType.TK_PUNTO, None, self._line, self._position + 1)
         elif match(r'\;', self._character):
-            token = Token(TokenType.TK_PUNTO_Y_COMA, self._character, self._line, self._position + 1)
+            token = Token(TokenType.TK_PUNTO_Y_COMA, None, self._line, self._position + 1)
         elif match(r'\-', self._character):
-            token = Token(TokenType.TK_RESTA, self._character, self._line, self._position + 1)
+            token = Token(TokenType.TK_RESTA, None, self._line, self._position + 1)
         elif match(r'\+', self._character):
-            token = Token(TokenType.TK_SUMA, self._character, self._line, self._position + 1)
+            token = Token(TokenType.TK_SUMA, None, self._line, self._position + 1)
         elif self._is_letter(self._character):
             
             initial_position = self._position + 1
             literal = self._read_identifier()
             token_type = lookup_token_type(literal)
 
-            return Token(token_type, literal, self._line, initial_position)
+            if token_type == TokenType.ID:
+                return Token(token_type, literal, self._line, initial_position)
+            else: 
+                return Token(token_type, None, self._line, initial_position)
+                
         elif self._is_number(self._character):
 
             initial_position = self._position + 1
@@ -73,7 +91,7 @@ class Lexer:
             return Token(TokenType.TK_NUMERO, literal, self._line, initial_position)
         else:
             if len(self._character) >= 1:
-                token = Token(TokenType.TK_ILEGAL, self._character, self._line, self._position + 1)
+                token = Token(TokenType.TK_ILEGAL, None, self._line, self._position + 1)
             else:
                 return None
 
@@ -106,11 +124,9 @@ class Lexer:
         """Genera un token de dos carácteres."""
         initial_position = self._position + 1
         
-        prefix = self._character
         self._read_character()
-        suffix = self._character
 
-        return Token(token_type, f'{prefix}{suffix}', self._line, initial_position)
+        return Token(token_type, None, self._line, initial_position)
 
     def _read_character(self) -> None:
         """Lee el siguiente carácter de la cadena."""
