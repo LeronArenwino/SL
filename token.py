@@ -126,4 +126,7 @@ class Token(NamedTuple):
   position: int
 
   def __str__(self) -> str:
-    return f'<{self.token_type.name.lower()},{self.literal},{self.lineno},{self.position}>'
+    if self.literal == 'SI':
+      return f'<{self.token_type.name},{self.literal},{self.lineno},{self.position}>'
+    else:
+      return f'<{self.token_type.name.lower()},{self.literal},{self.lineno},{self.position}>'
