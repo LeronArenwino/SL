@@ -125,6 +125,21 @@ class Lexer:
 
         return token
 
+    def _comment(self) -> None:
+        """Valida si la lista de comentarios esta vacía sino lee carácteres desde la
+        posición de inicio de un '/*' hasta la posición final de un '*/'."""
+        if len(self._comment_list) == 0:
+            self._is_comment = False
+        else:
+            comment = self._comment_list[0]
+            if comment[3] == self._line and comment[2] == self._position :
+                self._position += 1
+                self._read_character()
+                self._is_comment = False
+                self._comment_list.pop(0)
+            else:
+                self._read_character()
+
     def _is_digit(self, character: str) -> bool:
         """Valida si el carácter es un carácter permitido de la expresión."""
         return bool(match(r'[0-9a-zA-ZñÑ_]+', character))
