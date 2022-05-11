@@ -26,6 +26,10 @@ class Lexer:
 
         self._skip_whitespace()
 
+        if self._is_comment:
+            self._comment()
+            return None
+
         if match(r'\=', self._character):
             if self._peek_character() == '=':
                 token = self._make_two_character_token(TokenType.TK_IGUAL_QUE)
@@ -40,6 +44,17 @@ class Lexer:
         elif match(r'\/', self._character):
             if self._peek_character() == '/':
                 return None
+            elif self._peek_character() == '*':
+                if len(self._comment_list) == 0:
+                    token = Token(TokenType.TK_DIVISION, None, self._line, self._position + 1)
+                else:
+                    for comment in self._comment_list:
+                        if comment[1] == self._line and comment[0] == self._position:    
+                            self._is_comment = True
+                            self._read_character()
+                            return None
+                        else:
+                            token = Token(TokenType.TK_DIVISION, None, self._line, self._position + 1)
             else:
                 token = Token(TokenType.TK_DIVISION, None, self._line, self._position + 1)
         elif match(r'\:', self._character):
