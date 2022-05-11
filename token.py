@@ -130,7 +130,7 @@ class Token(NamedTuple):
 
   def __str__(self) -> str:
     if self.literal == None:
-      if self.literal == 'SI':
+      if self.token_type.name == 'SI' or self.token_type.name == 'NO' or self.token_type.name == 'TRUE' or self.token_type.name == 'FALSE':
         return f'<{self.token_type.name},{self.lineno},{self.position}>'
       elif self.token_type.name == 'TK_ILEGAL':
         return f'>>> Error lexico(linea:{self.lineno},posicion:{self.position})'
@@ -181,8 +181,8 @@ def lookup_token_type(literal: str) -> TokenType:
     'tk_logico': TokenType.TK_LOGICO,
     'cadena': TokenType.CADENA,
     'tk_cadena': TokenType.TK_CADENA,
-    'true': TokenType.TRUE,
-    'false': TokenType.TRUE,
+    'TRUE': TokenType.TRUE,
+    'FALSE': TokenType.FALSE,
     'SI': TokenType.SI,
     'NO': TokenType.NO,
 
