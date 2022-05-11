@@ -36,10 +36,9 @@ for line, source in enumerate(sources):
         if token != None:
             if check_status:
                 tokens.append(token)
-                # token_list.append(token)
-                # if token.token_type == 'tk_ilegal':
-                #     check_status = False
-                #     break
+                if token.token_type.name == 'TK_ILEGAL':
+                    check_status = False
+                    break
 
     # comment = getattr(lexer, '_comment') 
 
