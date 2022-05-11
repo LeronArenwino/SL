@@ -3,7 +3,10 @@ from token import (
     Token,
     TokenType
 )
-from re import match
+from re import (
+    match,
+    search,
+)
 
 class Lexer:
 
@@ -72,6 +75,26 @@ class Lexer:
             token = Token(TokenType.TK_RESTA, None, self._line, self._position + 1)
         elif match(r'\+', self._character):
             token = Token(TokenType.TK_SUMA, None, self._line, self._position + 1)
+        elif match(r'^\"$', self._character):
+
+            initial_position = self._position + 1
+            literal = self._read_string()
+
+            if search(r'"(.*?)"', literal):
+                return Token(TokenType.TK_CADENA, literal, self._line, initial_position)
+            else:
+                token = Token(TokenType.TK_ILEGAL, None, self._line, initial_position)
+
+        elif match(r'^\'$', self._character):
+
+            initial_position = self._position + 1
+            literal = self._read_simple_string()
+
+            if search(r"'(.*?)'", literal):
+                return Token(TokenType.TK_CADENA, literal, self._line, initial_position)
+            else:
+                token = Token(TokenType.TK_ILEGAL, None, self._line, initial_position)
+        
         elif self._is_letter(self._character):
             
             initial_position = self._position + 1
@@ -106,6 +129,14 @@ class Lexer:
     def _is_letter(self, character: str) -> bool:
         """Valida si el carácter es una letra permitida."""
         return bool(match(r'[a-zA-ZñÑ_][a-zA-ZñÑ0-9_]*', character))
+
+    def _is_not_mark(self, character: str) -> bool:
+        """Valida si el carácter no es una comilla doble."""
+        return bool(match(r'[^"]+', character))
+    
+    def _is_not_simple_mark(self, character: str) -> bool:
+        """Valida si el carácter no es una comilla simple."""
+        return bool(match(r"[^']+", character))
 
     def _is_number(self, character: str) -> bool:
         """Valida si el carácter es un número."""
@@ -147,6 +178,26 @@ class Lexer:
 
         return self._source[initial_position:self._position]
     
+    def _read_string(self) -> str:
+        initial_position = self._position
+        self._read_character()
+        while self._is_not_mark(self._character):
+            self._read_character()
+
+        self._read_character()
+        
+        return self._source[initial_position:self._position]
+
+    def _read_simple_string(self) -> str:
+        initial_position = self._position
+        self._read_character()
+        while self._is_not_simple_mark(self._character):
+            self._read_character()
+
+        self._read_character()
+        
+        return self._source[initial_position:self._position]
+
     def _read_number(self) -> str:
         """Lee la secuencia de carácteres númericos."""
         initial_position = self._position
