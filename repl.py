@@ -60,8 +60,9 @@ def start_repl() -> None:
     eof_if: bool = True
     sources: List = []
 
-    while eof_if and (source := input()) != 'exit()':
+    while eof_if:
         try:
+            source = input()
             if bool(search(r'^\!$', source)):
                 eof_if = False
         except EOFError:
