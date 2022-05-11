@@ -7,15 +7,18 @@ from re import (
     match,
     search,
 )
+from typing import List
 
 class Lexer:
 
-    def __init__(self, source: str, line: int) -> None:
+    def __init__(self, source: str, line: int, is_comment: bool, comment_list: List) -> None:
         self._source: str = source
         self._line: int = line
         self._character: str = ''
         self._read_position: int = 0
         self._position: int = 0
+        self._is_comment: bool = is_comment
+        self._comment_list: List = comment_list
 
         self._read_character()
 
