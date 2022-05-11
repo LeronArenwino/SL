@@ -121,14 +121,18 @@ class Lexer:
         self._read_character()
 
         return token
-    
+
+    def _is_digit(self, character: str) -> bool:
+        """Valida si el carácter es un carácter permitido de la expresión."""
+        return bool(match(r'[0-9a-zA-ZñÑ_]+', character))
+
     def _is_exp(self, character: str) -> bool:
         """Valida si el carácter es un 'E' o 'e'."""
         return bool(match(r'[Ee]+', character))
 
     def _is_letter(self, character: str) -> bool:
-        """Valida si el carácter es una letra permitida."""
-        return bool(match(r'[a-zA-ZñÑ_][a-zA-ZñÑ0-9_]*', character))
+        """Valida si el carácter es un carácter permitido de la expresión."""
+        return bool(match(r'[a-zA-ZñÑ_]', character))
 
     def _is_not_mark(self, character: str) -> bool:
         """Valida si el carácter no es una comilla doble."""
@@ -170,10 +174,13 @@ class Lexer:
         self._read_position += 1
 
     def _read_identifier(self) -> str:
-        """Lee la secuencia de carácteres."""
+        """Lee la secuencia de carácteres para generar un identificador."""
         initial_position = self._position
 
         while self._is_letter(self._character):
+            self._read_character()
+
+        while self._is_digit(self._character):
             self._read_character()
 
         return self._source[initial_position:self._position]
