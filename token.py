@@ -132,10 +132,13 @@ class Token(NamedTuple):
     if self.literal == None:
       if self.literal == 'SI':
         return f'<{self.token_type.name},{self.lineno},{self.position}>'
+      elif self.token_type.name == 'TK_ILEGAL':
+        return f'>>> Error lexico(linea:{self.lineno},posicion:{self.position})'
       else:
         return f'<{self.token_type.name.lower()},{self.lineno},{self.position}>'
     else:
-      return f'<{self.token_type.name.lower()},{self.literal},{self.lineno},{self.position}>'
+        return f'<{self.token_type.name.lower()},{self.literal},{self.lineno},{self.position}>'
+      
 
 def lookup_token_type(literal: str) -> TokenType:
   keywords: Dict[str, TokenType] = {
