@@ -1,7 +1,10 @@
+from grammar import Grammar
 from lexer import Lexer
 from token import Token
 from typing import (
+    Dict,
     List,
+    Set,
     Tuple
 )
 from re import (
@@ -75,3 +78,18 @@ def start_repl() -> None:
 
     for token in tokens:
         print(token)
+
+    not_terminal: Set = {'A', 'B', 'C'}
+    terminal: Set = {'a', 'b', 'bas', 'big', 'boss', '', 'c'}
+    initial_symbol: str = 'A'
+    productions: Dict[str, Set] = {
+        'A': {'a', 'B', 'C'},
+        'B': {'b', 'bas'},
+        'B': {'big', 'C', 'boss'},
+        'C': {''},
+        'C': {'c'}
+    }
+
+    grammar: Grammar = Grammar(not_terminal, terminal, initial_symbol, productions)
+
+    print(grammar)
