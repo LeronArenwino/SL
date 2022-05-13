@@ -14,3 +14,6 @@ class Grammar:
 
     def __str__(self) -> str:
         return f'grammar: {self._not_terminal}, {self._terminal}, {self._initial_symbol}, {self._productions}'
+
+    def lookup_production(self, not_terminal: str) -> Tuple:
+        return self._productions.get(not_terminal)
