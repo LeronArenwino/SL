@@ -1,3 +1,4 @@
+from typing import List
 from grammar import Grammar
 
 class Parser:
