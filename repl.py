@@ -12,6 +12,8 @@ from re import (
     search,
 )
 
+from parser import Parser
+
 def _comment_list(sources: str) -> List:
     
     comment_list: List[Tuple] = []
@@ -79,17 +81,19 @@ def start_repl() -> None:
     for token in tokens:
         print(token)
 
-    not_terminal: Set = {'A', 'B', 'C'}
-    terminal: Set = {'a', 'b', 'bas', 'big', 'boss', '', 'c'}
+    not_terminal: List = ['A', 'B', 'C']
+    terminal: List = ['a', 'b', 'bas', 'big', 'boss', '', 'c']
     initial_symbol: str = 'A'
-    productions: Dict[str, Set] = {
-        'A': {'a', 'B', 'C'},
-        'B': {'b', 'bas'},
-        'B': {'big', 'C', 'boss'},
-        'C': {''},
-        'C': {'c'}
+    productions: Dict[str, Tuple] = {
+        'A': (['a', 'B', 'C']),
+        'B': (['b', 'bas'], ['big', 'C', 'boss']),
+        'C': (['$'], ['c']),
     }
 
     grammar: Grammar = Grammar(not_terminal, terminal, initial_symbol, productions)
 
-    print(grammar)
+    parser: Parser = Parser(grammar)
+
+    parser.first('A')
+    parser.first('B')
+    parser.first('C')
