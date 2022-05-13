@@ -1,15 +1,16 @@
 from typing import (
     Dict,
-    Set
+    List,
+    Tuple
 )
 
 class Grammar:
 
-    def __init__(self, not_terminal: Set, terminal: Set, initial_symbol: str, productions: Dict) -> None:
-        self._not_terminal: Set = not_terminal
-        self._terminal: Set = terminal
+    def __init__(self, not_terminal: List, terminal: List, initial_symbol: str, productions: Dict[str, Tuple]) -> None:
+        self._not_terminal: List = not_terminal
+        self._terminal: List = terminal
         self._initial_symbol: str = initial_symbol
-        self._productions: Dict = productions
+        self._productions: Dict[str, Tuple] = productions
 
     def __str__(self) -> str:
         return f'grammar: {self._not_terminal}, {self._terminal}, {self._initial_symbol}, {self._productions}'
