@@ -87,13 +87,16 @@ def start_repl() -> None:
     productions: Dict[str, Tuple] = {
         'A': (['a', 'B', 'C']),
         'B': (['b', 'bas'], ['big', 'C', 'boss']),
-        'C': (['$'], ['c']),
+        'C': (['&'], ['c']),
     }
 
     grammar: Grammar = Grammar(not_terminal, terminal, initial_symbol, productions)
 
     parser: Parser = Parser(grammar)
 
-    parser.first('A')
-    parser.first('B')
-    parser.first('C')
+    first_of_A = parser.first('A')
+    print(first_of_A)
+    first_of_B = parser.first('B')
+    print(first_of_B)
+    first_of_C = parser.first('C')
+    print(first_of_C)
