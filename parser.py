@@ -6,117 +6,67 @@ class Parser:
     def __init__(self, grammar: Grammar) -> None:
         self._grammar: Grammar = grammar
 
-    def first(self, not_terminal: str) -> List:
+    def firsts_of_not_terminal(self, not_terminal: str) -> List:
 
-        count_productions: int = 0
         firsts_of_not_terminal: List = []
+        count_state: int = 0
 
-        not_terminal_productions = self._grammar.lookup_production(not_terminal)
+        not_terminal_rules = self._grammar.lookup_production(not_terminal)
 
-        """Valida si las reglas están en una lista."""
-        if isinstance(not_terminal_productions, List):
+        for not_terminal_rule in not_terminal_rules:
 
-            production_list: List = []
-            state = not_terminal_productions[count_productions]
+            # Valida si el único elemento de la regla para el no terminal es epsilon
+            if len(not_terminal_rules) == 1 and len(not_terminal_rule) == 1 and not_terminal_rule[0] == '&':
+                
+                firsts_of_not_terminal.append('&')
+                
+                return firsts_of_not_terminal
+            
+            if len(not_terminal_rule) == 1 and not_terminal_rule[0] == '&':
+                
+                firsts_of_not_terminal.append('&')
+                
+                return firsts_of_not_terminal
+
+            state = not_terminal_rule[count_state]
 
             if state in self._grammar._terminal:
 
-                production_list.append(state)
-                firsts_of_not_terminal.append(production_list)
-
+                firsts_of_not_terminal.append(state)
+            
             elif state in self._grammar._not_terminal:
-                
-                firsts_of_next_not_termianl = self.first(state)
-                reduce_list = [item for sublist in firsts_of_next_not_termianl for item in sublist]
 
-                print(reduce_list)
-                if '&' in reduce_list:
+                next_firsts_of_not_terminal = self.firsts_of_not_terminal(state)
+                if '&' in next_firsts_of_not_terminal:
+                    next_firsts_of_not_terminal.remove('&')
 
-                    firsts_of_next_not_termianl = self.first(state)
-                    print(firsts_of_next_not_termianl)
+                epsilon_in_not_terminal: bool = False
 
-                firsts_of_not_terminal.extend(reduce_list)
+                next_not_terminal_rules = self._grammar.lookup_production(state)
 
-            else:
-                
-                firsts_of_not_terminal.append(['&'])
+                for next_not_terminal_rule in next_not_terminal_rules:
 
-        
+                    if '&' in next_not_terminal_rule:
 
-        elif isinstance(not_terminal_productions, Tuple):
+                        epsilon_in_not_terminal = True
+                        break
 
-            for not_terminal_production in not_terminal_productions:
+                if epsilon_in_not_terminal:
+                    
+                    if len(next_not_terminal_rules) == 1:
 
-                production_list: List = []
-
-                if isinstance(not_terminal_production, List):
-
-                    state = not_terminal_production[count_productions]
-
-                    if state in self._grammar._terminal:
-
-                        production_list.append(state)
-                        firsts_of_not_terminal.append(production_list)
-
-                    elif state in self._grammar._not_terminal:
-
-                        firsts_of_next_not_termianl = self.first(state)
-                        reduce_list = [item for sublist in firsts_of_next_not_termianl for item in sublist]
-                        print(reduce_list)
-
-                        if '&' in reduce_list:
-                            
-                            if count_productions >= len(not_terminal_production):
-
-                                firsts_of_not_terminal.append(reduce_list)
-
-                            else:
-                                
-                                for production in reduce_list:
-                                    
-                                    print(production)
-                                    next_productions: List = []
-
-                                    if '&' != production:
-
-                                        next_productions.append(production)
-                                        print(next_productions)
-                                        firsts_of_not_terminal.append(next_productions)
-
-                                    else:
-
-                                        state = not_terminal_production[count_productions + 1]
-                                        print(state)
-                                        firsts_of_next_not_termianl = self.first(state)
-
-                                        if len(firsts_of_next_not_termianl) > 0:
-                                            
-                                            if '&' in firsts_of_next_not_termianl:
-
-                                                firsts_of_next_not_termianl = self.first(state)
-
-                                            print('aca')
-                                            print(firsts_of_next_not_termianl)
-                                            reduce_list = [item for sublist in firsts_of_next_not_termianl for item in sublist]
-                                            firsts_of_not_terminal.append(reduce_list)
-
-                                        else:
-                                            print('aca')
-                                            firsts_of_not_terminal.append(reduce_list)
-                                            count_productions += 1
-
-                        else:
-
-                            firsts_of_not_terminal.append(reduce_list)
+                        firsts_of_not_terminal.append('&')
                     
                     else:
-                
-                        firsts_of_not_terminal.append(['&'])
+                        if count_state >= len(not_terminal_rule) - 1:
+                            pass
+                        else:
+                            state = not_terminal_rule[count_state + 1]
 
-        else:
+                            next_firsts_of_not_terminal.extend(self.firsts_of_not_terminal(state))
 
-            firsts_of_not_terminal.append(['&'])
-        
+                firsts_of_not_terminal.extend(next_firsts_of_not_terminal)
+
         return firsts_of_not_terminal
 
     def _peek_token(self) -> str:
