@@ -81,22 +81,22 @@ def start_repl() -> None:
     for token in tokens:
         print(token)
 
-    not_terminal: List = ['A', 'B', 'C']
-    terminal: List = ['a', 'b', 'bas', 'big', 'boss', '', 'c']
+    not_terminal: List = ['A', 'B', 'C', 'D']
+    terminal: List = ['all','bet','bad', 'big', 'boss', 'cat', 'cow', 'dat', 'bat']
     initial_symbol: str = 'A'
-    productions: Dict[str, Tuple] = {
-        'A': (['a', 'B', 'C']),
-        'B': (['b', 'bas'], ['big', 'C', 'boss']),
-        'C': (['&'], ['c']),
+    productions: Dict[str, List] = {
+        'A': [['all','B', 'C'], ['bad']],
+        'B': [['big', 'C', 'boss'], ['bet']],
+        'C': [['cat'], ['cow']],
     }
 
     grammar: Grammar = Grammar(not_terminal, terminal, initial_symbol, productions)
 
     parser: Parser = Parser(grammar)
 
-    first_of_A = parser.first('A')
+    first_of_A = parser.firsts_of_not_terminal('A')
     print(first_of_A)
-    first_of_B = parser.first('B')
+    first_of_B = parser.firsts_of_not_terminal('B')
     print(first_of_B)
-    first_of_C = parser.first('C')
+    first_of_C = parser.firsts_of_not_terminal('C')
     print(first_of_C)
