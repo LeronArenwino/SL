@@ -78,8 +78,8 @@ def start_repl() -> None:
 
     tokens: List = _tokens_generator(sources, comment_list)
 
-    for token in tokens:
-        print(token)
+    # for token in tokens:
+    #     print(token)
 
     not_terminal: List = ['A', 'B', 'C']
     terminal: List = ['a', 'b', 'bas', 'big', 'boss', '', 'c']
@@ -87,13 +87,11 @@ def start_repl() -> None:
     productions: Dict[str, Tuple] = {
         'A': (['a', 'B', 'C']),
         'B': (['b', 'bas'], ['big', 'C', 'boss']),
-        'C': (['$'], ['c']),
+        'C': (['&'], ['c']),
     }
 
     grammar: Grammar = Grammar(not_terminal, terminal, initial_symbol, productions)
 
     parser: Parser = Parser(grammar)
 
-    parser.first('A')
-    parser.first('B')
-    parser.first('C')
+    first_of_A = parser.first('A')
