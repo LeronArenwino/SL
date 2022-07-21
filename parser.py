@@ -6,61 +6,74 @@ class Parser:
     def __init__(self, grammar: Grammar) -> None:
         self._grammar: Grammar = grammar
 
-    def first(self, not_terminal: str) -> Tuple:
+    def firsts_of_not_terminal(self, not_terminal: str) -> List:
 
         firsts_of_not_terminal: List = []
+        count_state: int = 0
 
-        not_terminal_productions = self._grammar.lookup_production(not_terminal)
+        not_terminal_rules = self._grammar.lookup_production(not_terminal)
 
-        if isinstance(not_terminal_productions, List):
+        for not_terminal_rule in not_terminal_rules:
 
-            state = not_terminal_productions[0]
+            # Valida si el único elemento de la regla para el no terminal es epsilon
+            if len(not_terminal_rules) == 1 and len(not_terminal_rule) == 1 and not_terminal_rule[0] == '&':
+                
+                firsts_of_not_terminal.append('&')
+                
+                return firsts_of_not_terminal
+            
+            if len(not_terminal_rule) == 1 and not_terminal_rule[0] == '&':
+                
+                firsts_of_not_terminal.append('&')
+                
+                return firsts_of_not_terminal
+
+            state = not_terminal_rule[count_state]
 
             if state in self._grammar._terminal:
 
                 firsts_of_not_terminal.append(state)
-
+            
             elif state in self._grammar._not_terminal:
 
-                firsts_of_next_not_termianl = self.first(state)
-                firsts_of_not_terminal.extend(firsts_of_next_not_termianl)
+                next_firsts_of_not_terminal = self.firsts_of_not_terminal(state)
+                if '&' in next_firsts_of_not_terminal:
+                    next_firsts_of_not_terminal.remove('&')
 
-            else:
-                
-                firsts_of_not_terminal.append('&')
+                epsilon_in_not_terminal: bool = False
 
-        elif isinstance(not_terminal_productions, Tuple):
+                next_not_terminal_rules = self._grammar.lookup_production(state)
 
-            for not_terminal_production in not_terminal_productions:
+                for next_not_terminal_rule in next_not_terminal_rules:
 
-                production_list: List = []
+                    if '&' in next_not_terminal_rule:
 
-                if isinstance(not_terminal_production, List):
+                        epsilon_in_not_terminal = True
+                        break
 
-                    state = not_terminal_production[0]
+                if epsilon_in_not_terminal:
+                    
+                    if len(next_not_terminal_rules) == 1:
 
-                    if state in self._grammar._terminal:
-
-                        production_list.append(state)
-                        firsts_of_not_terminal.append(production_list)
-
-                    elif state in self._grammar._not_terminal:
-
-                        firsts_of_next_not_termianl = self.first(state)
-                        reduce_list = [item for sublist in firsts_of_next_not_termianl for item in sublist]
-                        firsts_of_not_terminal.append(reduce_list)
+                        firsts_of_not_terminal.append('&')
                     
                     else:
-                
-                        firsts_of_not_terminal.append('&')
+                        if count_state >= len(not_terminal_rule) - 1:
+                            pass
+                        else:
+                            state = not_terminal_rule[count_state + 1]
 
-        else:
+                            next_firsts_of_not_terminal.extend(self.firsts_of_not_terminal(state))
 
-            firsts_of_not_terminal.append('&')
+                firsts_of_not_terminal.extend(next_firsts_of_not_terminal)
 
-        print('El analisis sintactico ha finalizado exitosamente.')
+        return firsts_of_not_terminal
+
+    def _peek_token(self) -> str:
+        if self._read_position >= len(self._source):
+            return ''
         
-        return tuple(firsts_of_not_terminal)
+        return self._source[self._read_position]
 
     def see_grammar(self) -> None:
         print(self._grammar)
