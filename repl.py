@@ -78,8 +78,8 @@ def start_repl() -> None:
 
     tokens: List = _tokens_generator(sources, comment_list)
 
-    for token in tokens:
-        print(token)
+    # for token in tokens:
+    #     print(token)
 
     not_terminal: List = ['A', 'B', 'C', 'D']
     terminal: List = ['bet','bad', 'big', 'boss', 'cat', 'cow', 'dat', 'bat']
