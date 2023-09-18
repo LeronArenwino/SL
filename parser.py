@@ -9,6 +9,7 @@ class Parser:
     def firsts_of_not_terminal(self, not_terminal: str) -> List:
 
         firsts_of_not_terminal: List = []
+        next_firsts_of_not_terminal: List = []
         count_state: int = 0
 
         not_terminal_rules = self._grammar.lookup_production(not_terminal)
@@ -69,11 +70,20 @@ class Parser:
 
         return firsts_of_not_terminal
 
-    def _peek_token(self) -> str:
-        if self._read_position >= len(self._source):
-            return ''
+    def afters_of_not_terminal(self, not_terminal: str) -> List:
         
-        return self._source[self._read_position]
+        afters_of_not_terminal: List = []
+
+        not_terminal_rules = self._grammar.lookup_production(not_terminal)
+
+        if not_terminal == self._grammar._initial_symbol:
+            afters_of_not_terminal.append('$')
+
+        for production in self._grammar._productions:
+            print(production)
+
+        return afters_of_not_terminal
+        
 
     def see_grammar(self) -> None:
         print(self._grammar)

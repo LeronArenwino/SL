@@ -82,11 +82,11 @@ def start_repl() -> None:
         print(token)
 
     not_terminal: List = ['A', 'B', 'C', 'D']
-    terminal: List = ['all','bet','bad', 'big', 'boss', 'cat', 'cow', 'dat', 'bat']
+    terminal: List = ['bet','bad', 'big', 'boss', 'cat', 'cow', 'dat', 'bat']
     initial_symbol: str = 'A'
     productions: Dict[str, List] = {
-        'A': [['all','B', 'C'], ['bad']],
-        'B': [['big', 'C', 'boss'], ['bet']],
+        'A': [['B', 'C'], ['bad']],
+        'B': [['big', 'C', 'boss'], ['&']],
         'C': [['cat'], ['cow']],
     }
 
@@ -100,3 +100,6 @@ def start_repl() -> None:
     print(first_of_B)
     first_of_C = parser.firsts_of_not_terminal('C')
     print(first_of_C)
+
+    # after_of_A = parser.afters_of_not_terminal('A')
+    # print(after_of_A)
